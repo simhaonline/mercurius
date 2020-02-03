@@ -11,7 +11,6 @@
 package user
 
 import (
-	"database/sql"
 	"github.com/worldiety/mercurius/ee"
 	"github.com/worldiety/suid"
 )
@@ -21,8 +20,8 @@ var _ Repository = (*sqlRepository)(nil)
 type sqlRepository struct {
 }
 
-func NewSQLRepository(tx *sql.Tx) Repository {
-	return nil
+func NewSQLRepository() Repository {
+	return &sqlRepository{}
 }
 
 func (r *sqlRepository) Create() (*User, error) {

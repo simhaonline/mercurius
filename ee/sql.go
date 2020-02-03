@@ -15,14 +15,14 @@ import (
 	"fmt"
 )
 
-// ErrNoDatabaseAvailable is returned, if no transaction can be opened.
+// ErrNoDatabaseAvailable is returned, if database is nil.
 var ErrNoDatabaseAvailable = fmt.Errorf("no database available")
 
 // SQL holds a valid transaction
 type SQL struct {
 	parent        *Ctx    // parent is never nil
 	tx            *sql.Tx // tx may only be nil, if firstError is not nil
-	firstError    error   // may be nil
+	byPass        *ByPass
 	pendingResult *Result // pendingResult contains the currently pending result.
 }
 
@@ -30,13 +30,14 @@ type SQL struct {
 // or because a transaction cannot be opened, the SQL instance is set to failed but can be used in queries.
 // However, there will be never a real sql call anymore.
 func NewSQL(ctx *Ctx) *SQL {
-	s := &SQL{parent: ctx}
+	s := &SQL{parent: ctx, byPass: &ByPass{}}
+
 	if ctx.db == nil {
-		s.firstError = ErrNoDatabaseAvailable
+		s.byPass.Fail(ErrNoDatabaseAvailable)
 	} else {
 		tx, err := ctx.db.BeginTx(ctx.context, ctx.opts)
 		if err != nil {
-			s.firstError = fmt.Errorf("cannot begin transaction: %w", err)
+			s.byPass.Fail(fmt.Errorf("cannot begin transaction: %w", err))
 		}
 		s.tx = tx
 	}
@@ -51,12 +52,12 @@ func (s *SQL) Tx() *sql.Tx {
 
 // Error returns the first occurred error.
 func (s *SQL) Error() error {
-	return s.firstError
+	return s.byPass.Error()
 }
 
 // Query prepares a query and delegates to a context. Never fails.
 func (s *SQL) Query(query string, params ...interface{}) *Result {
-	if s.firstError != nil {
+	if s.byPass.Fail(nil) {
 		return &Result{parent: s}
 	}
 
@@ -66,13 +67,13 @@ func (s *SQL) Query(query string, params ...interface{}) *Result {
 
 	stmt, err := s.tx.PrepareContext(s.parent.Context(), query)
 	if err != nil {
-		s.firstError = fmt.Errorf("unable to prepare statement: %s [%v]:%w", query, params, err)
+		s.byPass.Fail(fmt.Errorf("unable to prepare statement: %s [%v]:%w", query, params, err))
 		return &Result{parent: s}
 	}
 
 	rows, err := stmt.Query(params...) // nolint: rowserrcheck // we ensure that close and err are evaluated later
 	if err != nil {
-		s.firstError = fmt.Errorf("unable to execute statement: %s [%v]:%w", query, params, err)
+		s.byPass.Fail(fmt.Errorf("unable to execute statement: %s [%v]:%w", query, params, err))
 		return &Result{parent: s}
 	}
 
@@ -88,16 +89,14 @@ func (s *SQL) closePending() error {
 	if s.pendingResult != nil {
 		err := s.pendingResult.rows.Close()
 
-		if s.firstError != nil {
-			s.firstError = fmt.Errorf("failed to close pending rows: %w", err)
-		}
+		s.byPass.Fail(fmt.Errorf("failed to close pending rows: %w", err))
 
 		s.pendingResult = nil
 
 		return err
 	}
 
-	return s.firstError
+	return s.byPass.Error()
 }
 
 // Close tries to commit if rollback is false and no error is pending. Safe to call on a nil pointer, which is not an
@@ -108,18 +107,14 @@ func (s *SQL) Close(rollback bool) error {
 	}
 
 	if s.tx != nil {
-		if s.firstError != nil || rollback {
-			err := s.tx.Rollback()
-
-			if s.firstError != nil {
-				s.firstError = err
-			}
+		if s.byPass.Fail(nil) || rollback {
+			s.byPass.Try(s.tx.Rollback())
 		} else {
-			s.firstError = s.tx.Commit()
+			s.byPass.Try(s.tx.Commit())
 		}
 	}
 
-	return s.firstError
+	return s.byPass.Error()
 }
 
 type Result struct {
@@ -133,8 +128,8 @@ type Row interface {
 
 // Map calls the given closure for each row of the result and returns the first error.
 func (r *Result) Map(closure func(row Row) error) error {
-	if r.parent.firstError != nil {
-		return r.parent.firstError
+	if r.parent.byPass.Fail(nil) {
+		return r.parent.byPass.Error()
 	}
 
 	if r.rows == nil {
@@ -144,28 +139,28 @@ func (r *Result) Map(closure func(row Row) error) error {
 	for r.rows.Next() {
 		err := closure(r.rows)
 		if err != nil {
-			r.parent.firstError = fmt.Errorf("failed to map: %w", err)
-			r.parent.parent.Suppressed(r.rows.Close())
+			r.parent.byPass.Fail(fmt.Errorf("failed to map: %w", err))
+			r.parent.byPass.Try(r.rows.Close())
 			r.parent.pendingResult = nil
 
-			return r.parent.firstError
+			return r.parent.byPass.Error()
 		}
 	}
 
 	if r.rows.Err() != nil {
-		r.parent.firstError = fmt.Errorf("failed to iterate: %w", r.rows.Err())
-		r.parent.parent.Suppressed(r.rows.Close())
+		r.parent.byPass.Fail(fmt.Errorf("failed to iterate: %w", r.rows.Err()))
+		r.parent.byPass.Try(r.rows.Close())
 		r.parent.pendingResult = nil
 
-		return r.parent.firstError
+		return r.parent.byPass.Error()
 	}
 
 	err := r.rows.Close()
 	if err != nil {
-		r.parent.firstError = fmt.Errorf("failed to close rows: %w", r.rows.Err())
+		r.parent.byPass.Fail(fmt.Errorf("failed to close rows: %w", r.rows.Err()))
 		r.parent.pendingResult = nil
 
-		return r.parent.firstError
+		return r.parent.byPass.Error()
 	}
 
 	r.parent.pendingResult = nil

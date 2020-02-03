@@ -12,7 +12,7 @@ package ee
 
 import "runtime/debug"
 
-// The ErrPanic
+// The ErrPanic is an error value around a recovered panic.
 type ErrPanic struct {
 	Cause   interface{} // Error contains the recovered error from the panic
 	Stack   string      // Stack contains a formatted string of the failed trace

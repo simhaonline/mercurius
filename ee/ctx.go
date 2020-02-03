@@ -16,18 +16,25 @@ import (
 	"fmt"
 )
 
-// Ctx represents a typed context object for any request (or other scoped operation) issued in the server.
+// Ctx represents a typed context object for any request (or other scoped operation) issued in an application.
 // It bundles the Context to use for timeouts, deadlines or cancellations and a database transaction. It is unique
-// per request and go routine and never shared.
+// per job and goroutine and never shared.
 //
 // You must never keep a reference to this Requests nor to anything it contains or returns.
 type Ctx struct {
 	context context.Context // context is never nil
-	sql     *SQL            // sql is always nil at first
+
 	opts    *sql.TxOptions  // opts may be nil
-	db      *sql.DB         // db may be nil, if no db configured
+	
+	// multiple db connections
+	sql     *SQL            // sql is always nil at first
+	db *sql.DB // db may be nil, if no db configured
 	// Logger?
 	// Session? -> no not always an http request
+}
+
+func NewCtx(ctx context.Context, db *sql.DB) *Ctx {
+	return &Ctx{context: ctx, db: db}
 }
 
 // Context returns the go context with timeout, deadline and cancellation to use.
