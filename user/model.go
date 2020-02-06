@@ -21,3 +21,7 @@ type User struct {
 	PHash  []byte    // PHash contains a salted and hashed password. We never persist any password.
 
 }
+
+type UsersResponse struct{
+	Users []*User
+}

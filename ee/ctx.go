@@ -25,7 +25,7 @@ type Ctx struct {
 	context context.Context // context is never nil
 
 	opts    *sql.TxOptions  // opts may be nil
-	
+
 	// multiple db connections
 	sql     *SQL            // sql is always nil at first
 	db *sql.DB // db may be nil, if no db configured

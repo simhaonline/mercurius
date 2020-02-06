@@ -7,7 +7,7 @@ GOLANGCI_LINT = ${TOOLSDIR}/golangci-lint
 GOLINT = ${TOOLSDIR}/golint
 TMP_GOPATH = $(CURDIR)/${TOOLSDIR}/.gopath
 
-all: lint test build ## Runs lint, test and build
+all: generate lint test build ## Runs lint, test and build
 
 clean: ## Removes any temporary and output files
 	rm -rf ${buildDir}
@@ -29,6 +29,9 @@ run: build ## Starts the compiled program
 help: ## Shows this help
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
 
+.PHONY: generate
+generate: ## Executes go generate
+	${GO} generate
 
 setup: installGolint installGolangCi ## Installs golint and golangci-lint
 	${GO} mod tidy

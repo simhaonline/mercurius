@@ -18,10 +18,11 @@ import (
 var _ Repository = (*sqlRepository)(nil)
 
 type sqlRepository struct {
+	sql *ee.SQL
 }
 
-func NewSQLRepository() Repository {
-	return &sqlRepository{}
+func NewSQLRepository(sql *ee.SQL) Repository {
+	return &sqlRepository{sql}
 }
 
 func (r *sqlRepository) Create() (*User, error) {
@@ -36,14 +37,11 @@ func (r *sqlRepository) Update(user *User) error {
 	panic("implement me")
 }
 
-func (r *sqlRepository) FindAll(ctx *ee.Ctx, opts struct {
-	Limit  int
-	Offset int
-}) ([]*User, error) {
+func (r *sqlRepository) FindAll(limit int, offset int) ([]*User, error) {
 	var users []*User
 
-	err := ctx.
-		SQL().Query("SELECT * FROM user LIMIT ? OFFSET ?", opts.Limit, opts.Offset).
+	err := r.sql.
+		Query("SELECT * FROM user LIMIT ? OFFSET ?", limit, offset).
 		Map(func(row ee.Row) error {
 			user := &User{}
 			users = append(users, user)
@@ -53,6 +51,6 @@ func (r *sqlRepository) FindAll(ctx *ee.Ctx, opts struct {
 	return users, err
 }
 
-func (r *sqlRepository) FindByLogin(ctx *ee.Ctx, login string) (*User, error) {
+func (r *sqlRepository) FindByLogin(login string) (*User, error) {
 	panic("implement me")
 }

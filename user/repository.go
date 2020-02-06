@@ -11,7 +11,6 @@
 package user
 
 import (
-	"github.com/worldiety/mercurius/ee"
 	"github.com/worldiety/suid"
 )
 
@@ -28,11 +27,8 @@ type Repository interface {
 	Update(user *User) error
 
 	// FindAll returns all users in a pageable way
-	FindAll(ctx *ee.Ctx, opts struct {
-		Limit  int
-		Offset int
-	}) ([]*User, error)
+	FindAll(limit int, offset int) ([]*User, error)
 
 	// FindByLogin is a special case, where a user has multiple unique logins
-	FindByLogin(scope *ee.Ctx, login string) (*User, error)
+	FindByLogin(login string) (*User, error)
 }

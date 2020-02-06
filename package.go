@@ -8,5 +8,7 @@
  * questions.
  */
 
+//go:generate go run ee/gen/resources.go ee/gen/golist.go
+
 // Package mercurius contains the worldiety authorization and authentication service.
 package mercurius
