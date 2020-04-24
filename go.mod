@@ -8,3 +8,8 @@ require (
 	github.com/worldiety/suid v0.0.0-20200129161126-49b8c0f9c9be
 	golang.org/x/sys v0.0.0-20200202164722-d101bd2416d5 // indirect
 )
+
+
+require github.com/worldiety/gluon v0.0.0
+
+replace github.com/worldiety/gluon => ../gluon
