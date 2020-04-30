@@ -4,27 +4,15 @@ import (
 	"context"
 	"database/sql"
 	"fmt"
-	"github.com/worldiety/mercurius/ee"
-	"github.com/worldiety/mercurius/user"
+	_ "github.com/lib/pq"
+	"github.com/worldiety/mercurius/service/user/repository/postgresql"
+	"github.com/worldiety/sqlm"
 	"net/http"
 )
 import _ "github.com/go-sql-driver/mysql"
 
 type AppCtx struct {
 	request *http.Request
-	*ee.Ctx
-}
-
-func (c *AppCtx) Request() ee.Request {
-	return ee.NewRequest(c.request)
-}
-
-func (c *AppCtx) Users() user.Repository {
-	return user.NewSQLRepository(c.Ctx.SQL())
-}
-
-func (c *AppCtx) UsersController() *user.Controller {
-	return user.NewController(c.Users())
 }
 
 type App struct {
@@ -33,7 +21,15 @@ type App struct {
 
 func main() {
 
-	db, err := sql.Open("mysql", "root:@/mercurius_test")
+	host := "localhost"
+	port := 5432
+	user := "tschinke"
+	password := ""
+	dbname := "mercurius"
+
+	psqlInfo := fmt.Sprintf("host='%s' port='%d' user='%s' password='%s' dbname='%s' sslmode=disable",
+		host, port, user, password, dbname)
+	db, err := sql.Open("postgres", psqlInfo)
 	if err != nil {
 		panic(err)
 	}
@@ -43,30 +39,17 @@ func main() {
 		panic("failed to connect to db: " + err.Error())
 	}
 
-	app := &App{db: db}
+	sqlm.MustMigrate(db, postgresql.Migrations...)
 
-	http.HandleFunc("/", app.ShowUsers)
-	http.ListenAndServe(":8080", nil)
-}
-
-func (a *App) ShowUsers(w http.ResponseWriter, r *http.Request) {
-	ctx := &AppCtx{Ctx: ee.NewCtx(context.Background(), a.db), request: r}
-
-	limit := ee.OptInt(ctx.Request().Param("limit"))
-	if limit == 0 {
-		limit = 100
-	}
-	offset := ee.OptInt(ctx.Request().Param("offset"))
-
-	ctx.UsersController().ShowUsers(limit, offset)
-
-	fmt.Fprintf(w, "Hello, %s!", r.URL.Path[1:])
-
-	users, err := ctx.Users().FindAll(100, 0)
+	var pgsUsers postgresql.Querier
+	pgsUsers = postgresql.New(db)
+	users, err := pgsUsers.ListUsers(context.Background())
 	if err != nil {
-		fmt.Fprintf(w, err.Error())
+		panic(err)
 	}
-	for _, usr := range users {
-		fmt.Fprintf(w, "Hello, %s!\n", usr.ID.String())
-	}
+	_ = users
+	_ = pgsUsers
+	_ = &App{db: db}
+
+	http.ListenAndServe(":8080", nil)
 }
