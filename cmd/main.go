@@ -2,54 +2,59 @@ package main
 
 import (
 	"context"
-	"database/sql"
 	"fmt"
-	_ "github.com/lib/pq"
-	"github.com/worldiety/mercurius/service/user/repository/postgresql"
-	"github.com/worldiety/sqlm"
-	"net/http"
+	"github.com/golangee/http"
+	"github.com/golangee/sql"
+	"github.com/golangee/uuid"
+
+	"github.com/worldiety/mercurius/service/sms"
 )
 import _ "github.com/go-sql-driver/mysql"
-
-type AppCtx struct {
-	request *http.Request
-}
-
-type App struct {
-	db *sql.DB
-}
+import _ "github.com/worldiety/mercurius"
 
 func main() {
 
-	host := "localhost"
-	port := 5432
-	user := "tschinke"
-	password := ""
-	dbname := "mercurius"
+	db := sql.MustOpen(sql.Opts{
+		Driver:       "mysql",
+		User:         "root",
+		DatabaseName: "mercurius_test",
+	})
 
-	psqlInfo := fmt.Sprintf("host='%s' port='%d' user='%s' password='%s' dbname='%s' sslmode=disable",
-		host, port, user, password, dbname)
-	db, err := sql.Open("postgres", psqlInfo)
+	sql.MustMigrate(db)
+
+	repos := sql.MustMakeSQLRepositories(db)
+
+	ctx := sql.WithContext(context.Background(), db)
+	smsRepo := repos[0].(sms.Repository)
+	if err := smsRepo.Create(ctx, uuid.New(), "1234", "hello sms"); err != nil {
+		panic(err)
+	}
+
+	users, err := smsRepo.FindAll(ctx, 5)
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(users)
+	fmt.Println("done")
+
+	usr, err := smsRepo.FindById(ctx, uuid.MustParse("353f07bd-9f59-4d67-888d-cc362fed7221"))
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(usr)
+
+	srv := http.NewServer()
+	srv.Use(sql.WithTransaction(db))
+
+	ctr, err := http.NewController(srv, sms.NewRestController(smsRepo))
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(ctr)
+
+	err = srv.Start(8080)
 	if err != nil {
 		panic(err)
 	}
 
-	err = db.Ping()
-	if err != nil {
-		panic("failed to connect to db: " + err.Error())
-	}
-
-	sqlm.MustMigrate(db, postgresql.Migrations...)
-
-	var pgsUsers postgresql.Querier
-	pgsUsers = postgresql.New(db)
-	users, err := pgsUsers.ListUsers(context.Background())
-	if err != nil {
-		panic(err)
-	}
-	_ = users
-	_ = pgsUsers
-	_ = &App{db: db}
-
-	http.ListenAndServe(":8080", nil)
 }

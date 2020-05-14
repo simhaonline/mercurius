@@ -1,0 +1,26 @@
+@startuml
+:Hoster: as Hoster
+:Tenant Owner: as TenantOwner
+
+(Use the application) as (Use)
+
+Hoster --> (Tenant Owner)
+
+User -> (Start)
+User --> (Use)
+
+Hoster ---> (Use)
+
+note top of Hoster : A hoster provides an on-premise instance
+note top of TenantOwner : A tenant owner is responsible to manage a group of tenants.
+
+
+note right of (Use)
+A note can also
+be on several lines
+end note
+
+note "This note is connected\nto several objects." as N2
+(Start) .. N2
+N2 .. (Use)
+@enduml

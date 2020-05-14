@@ -46,17 +46,16 @@ test: ## Executes the tests
 build: ## Performs a build and puts everything into the build directory
 	${GO} build -ldflags "${LDFLAGS}" -o ${BUILD_DIR}/${ARTIFACT_NAME} ${MAIN_PATH}
 
-run: clean build ## Starts the compiled program
+run: clean generate build ## Starts the compiled program
 	${BUILD_DIR}/${ARTIFACT_NAME}
 
 help: ## Shows this help
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
 
 generate: ## Executes go generate
-	cd service/user/repository && sqlc compile && sqlc generate
 	${GO} generate ./...
 
-setup: installGolangCi installSQLC ## Installs sqlc and golangci-lint
+setup: installGolangCi  ## Installs golangci-lint
 	${GO} mod tidy
 
 
@@ -64,8 +63,6 @@ installGolangCi:
 	mkdir -p ${TOOLSDIR}
 	curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $(TOOLSDIR) $(GOLANGCI_LINT_VERSION)
 
-installSQLC:
-	GO111MODULE=off && go get -u github.com/kyleconroy/sqlc/cmd/sqlc
 
 .DEFAULT_GOAL := help
 

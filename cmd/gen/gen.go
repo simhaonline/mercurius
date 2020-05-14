@@ -2,9 +2,9 @@
 package main
 
 import (
-	"github.com/worldiety/sqlm"
+	"github.com/golangee/reflectplus"
 )
 
 func main() {
-	sqlm.Must(sqlm.GenerateAll("../.."))
+	reflectplus.Must(reflectplus.Generate("../.."))
 }
