@@ -7,7 +7,7 @@ import (
 	"github.com/golangee/sql"
 	"github.com/golangee/uuid"
 
-	"github.com/worldiety/mercurius/service/sms"
+	"github.com/worldiety/mercurius/internal/service/sms"
 )
 import _ "github.com/go-sql-driver/mysql"
 import _ "github.com/worldiety/mercurius"
@@ -25,7 +25,7 @@ func main() {
 	repos := sql.MustMakeSQLRepositories(db)
 
 	ctx := sql.WithContext(context.Background(), db)
-	smsRepo := repos[0].(sms.Repository)
+	smsRepo := repos[0].(sms.MessageRepository)
 	if err := smsRepo.Create(ctx, uuid.New(), "1234", "hello sms"); err != nil {
 		panic(err)
 	}

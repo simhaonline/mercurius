@@ -5,7 +5,7 @@ ARTIFACT_NAME = mercurius
 MODULE_PATH = github.com/worldiety/mercurius
 
 ## the path which contains the main package to execute
-MAIN_PATH = github.com/worldiety/mercurius/cmd
+MAIN_PATH = github.com/worldiety/mercurius/cmd/mercurius
 
 ## for ldflags replacement
 BUILD_FILE_PATH = ${MODULE_PATH}
@@ -45,6 +45,13 @@ test: ## Executes the tests
 
 build: ## Performs a build and puts everything into the build directory
 	${GO} build -ldflags "${LDFLAGS}" -o ${BUILD_DIR}/${ARTIFACT_NAME} ${MAIN_PATH}
+
+
+buildWasm: generate ## Performs a wasm frontend build
+	GOOS=js GOARCH=wasm ${GO} build -ldflags "${LDFLAGS}" -o ${BUILD_DIR}/app.wasm ${MAIN_PATH}
+
+	cp "${GOROOT}/misc/wasm/wasm_exec.js" ${BUILD_DIR}
+	cp -r static/. ${BUILD_DIR}
 
 run: clean generate build ## Starts the compiled program
 	${BUILD_DIR}/${ARTIFACT_NAME}
