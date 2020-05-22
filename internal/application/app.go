@@ -12,9 +12,11 @@ package application
 
 import (
 	sql2 "database/sql"
-	_ "github.com/go-sql-driver/mysql" //mysql driver
+	_ "github.com/go-sql-driver/mysql" // mysql driver
+	srv "github.com/golangee/http"
 	"github.com/golangee/log"
 	"github.com/golangee/sql"
+
 	"github.com/worldiety/mercurius/internal/config"
 	"github.com/worldiety/mercurius/internal/service/setup"
 	"os"
@@ -44,6 +46,7 @@ func NewServer() *Server {
 
 func (a *Server) Configure(cfgFile string) {
 	a.cfgFile = cfgFile
+	a.settings = config.Default()
 
 	a.logger.Info("configure from settings file", log.Obj("file", cfgFile))
 	a.configurationErrors = nil
@@ -74,5 +77,12 @@ func (a *Server) Configure(cfgFile string) {
 		a.configurationErrors = append(a.configurationErrors, config.NoDatabaseError{Cause: err})
 	}
 	a.db = db
+}
 
+func (a *Server) StartDev(frontendDir string) {
+	a.startSrv(frontendDir, a.settings.Server.Port)
+}
+
+func (a *Server) initControllers(server *srv.Server) {
+	srv.MustNewController(server, setup.NewRestController(a))
 }

@@ -8,8 +8,6 @@
 //
 // Authors: Torben Schinke
 
-// +build !wasm
-
 package sms
 
 import (

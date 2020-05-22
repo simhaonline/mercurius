@@ -14,6 +14,7 @@ import (
 	"flag"
 	"github.com/golangee/log"
 	zap "github.com/golangee/log-zap"
+	_ "github.com/worldiety/mercurius" // reflectplus metadata
 	"github.com/worldiety/mercurius/build"
 	"github.com/worldiety/mercurius/internal/application"
 	"github.com/worldiety/mercurius/internal/config"
@@ -39,6 +40,7 @@ func main() {
 
 	cfgFile := flag.String("cfg", filepath.Join(dir, config.Filename), "the config file to use")
 	help := flag.Bool("help", false, "shows this help")
+	frontendDir := flag.String("devFrontend", "", "dev-only: absolute path to a directory with index.html and wasm file")
 
 	flag.Parse()
 	if *help {
@@ -48,4 +50,8 @@ func main() {
 
 	app := application.NewServer()
 	app.Configure(*cfgFile)
+	if *frontendDir != "" {
+		logger.Warn("serving development frontend", log.Obj("dir", *frontendDir))
+		app.StartDev(*frontendDir)
+	}
 }

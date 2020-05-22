@@ -2,10 +2,10 @@
 ARTIFACT_NAME = mercurius
 
 ## for the module itself
-MODULE_PATH = github.com/worldiety/mercurius
+MODULE_PATH = github.com/worldiety/mercurius/webapp
 
 ## the path which contains the main package to execute
-MAIN_PATH = github.com/worldiety/mercurius/cmd/mercurius
+MAIN_PATH = github.com/worldiety/mercurius/webapp/cmd/wasm
 
 ## for ldflags replacement
 BUILD_FILE_PATH = ${MODULE_PATH}
@@ -22,7 +22,6 @@ LDFLAGS = -X $(MODULE_PATH)/build.Time=${currentDate} -X $(MODULE_PATH)/build.Co
 
 TMP_DIR = $(TMPDIR)/$(MODULE_PATH)
 BUILD_DIR = $(TMP_DIR)/build
-BUILD_DIR_WEBAPP = $(TMP_DIR)/webapp/build
 TOOLSDIR = $(TMP_DIR)
 GO = go
 GOLANGCI_LINT = ${TOOLSDIR}/golangci-lint
@@ -44,15 +43,18 @@ test: ## Executes the tests
 
 .PHONY: build generate setup
 
-build: buildWebApp ## Performs a build and puts everything into the build directory
-	${GO} build -ldflags "${LDFLAGS}" -o ${BUILD_DIR}/${ARTIFACT_NAME} ${MAIN_PATH}
+build: ## Performs a build and puts everything into the build directory
+	GOOS=js GOARCH=wasm ${GO} build -ldflags "${LDFLAGS}" -o ${BUILD_DIR}/app.wasm ${MAIN_PATH}
+
+	$(shell echo "{\"Time\":\"${currentDate}\",\"Commit\":\"${currentCommit}\"}" > ${BUILD_DIR}/version )
+
+	cp "${GOROOT}/misc/wasm/wasm_exec.js" ${BUILD_DIR}
+	cp -r static/. ${BUILD_DIR}
 
 
-buildWebApp: ## Delegates a build to /webApp
-	cd webApp && $(MAKE) build
 
-run: clean generate build ## Starts the compiled program in development mode
-	${BUILD_DIR}/${ARTIFACT_NAME} -devFrontend ${BUILD_DIR_WEBAPP}
+run: clean generate build ## Starts the compiled program
+	${BUILD_DIR}/${ARTIFACT_NAME}
 
 help: ## Shows this help
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'

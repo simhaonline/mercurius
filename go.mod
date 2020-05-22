@@ -11,6 +11,7 @@ require (
 	github.com/golangee/reflectplus v0.0.0
 	github.com/golangee/sql v0.0.0-20200513144143-4ddbdfb22669
 	github.com/golangee/uuid v0.0.0-20200513144043-882c55e8ee6c
+	github.com/lpar/gzipped/v2 v2.0.2
 	gopkg.in/yaml.v2 v2.3.0
 )
 

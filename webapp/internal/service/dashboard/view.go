@@ -8,15 +8,29 @@
 //
 // Authors: Torben Schinke
 
-// +build js,wasm
-
-package main
+package dashboard
 
 import (
-	"github.com/worldiety/mercurius/internal/application"
+	. "github.com/golangee/forms"
 )
 
-func main() {
-	app := application.NewApp()
-	app.Start()
+const Path = "/dashboard"
+
+type ContentView struct {
+	*VStack
+	btn *Button
+}
+
+func NewContentView() *ContentView {
+	view := &ContentView{}
+	view.VStack = NewVStack().AddViews(
+		NewText("your dashboard").Style(Font(Headline2)),
+		NewText("your account").Style(Font(Body)),
+
+	)
+	return view
+}
+
+func FromQuery(Query) View {
+	return NewContentView()
 }

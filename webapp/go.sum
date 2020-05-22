@@ -1,0 +1,4 @@
+github.com/golangee/forms v0.0.0-20200518162453-b89914aa6b82 h1:vu6xPN/hTDTy3qq0kiG5V/rdhUCw9KW/u4Wur7hur7g=
+github.com/golangee/forms v0.0.0-20200518162453-b89914aa6b82/go.mod h1:rPS5UDs4pXTKBDV/gJjuYI7huMREaBodCg41LRsKw3g=
+github.com/golangee/log v0.0.0-20200520150645-a22119200d7a h1:CvK23FeWHs6QlNFr7jTjXE/Wgxfm7uZXMnicG/3CWZY=
+github.com/golangee/log v0.0.0-20200520150645-a22119200d7a/go.mod h1:3bn9K3Qv+nn37RGViudYamNme1p/xf5olDp5Qehf6w8=

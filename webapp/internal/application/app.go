@@ -1,11 +1,23 @@
-// +build js,wasm
+// See the file LICENSE for redistribution and license information.
+//
+// Copyright (c) 2020 worldiety. All rights reserved.
+// DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
+//
+// Please contact worldiety, Marie-Curie-Straße 1, 26129 Oldenburg, Germany
+// or visit www.worldiety.com if you need more information or have any questions.
+//
+// Authors: Torben Schinke
 
 package application
 
 import (
 	. "github.com/golangee/forms"
 	"github.com/golangee/forms/theme/material/icon"
-	"github.com/worldiety/mercurius/build"
+	"github.com/golangee/log"
+	"github.com/worldiety/mercurius/webapp/build"
+	"github.com/worldiety/mercurius/webapp/internal/service/dashboard"
+	"github.com/worldiety/mercurius/webapp/internal/service/notfound"
+	"github.com/worldiety/mercurius/webapp/internal/service/setup"
 	"path/filepath"
 	"time"
 )
@@ -16,6 +28,8 @@ type App struct {
 
 func NewApp() *App {
 	a := &App{}
+	logger := log.New("")
+	logger.Info("mercurius frontend", log.Obj("version", build.Env().String()))
 	a.Application = NewApplication(a, build.Env().String())
 	return a
 }
@@ -64,4 +78,12 @@ func (a *App) WithDrawer(f func(q Query) View) func(Query) View {
 			NewList().AddItems(items...),
 			v)
 	}
+}
+
+func (a *App) Start() {
+	a.UnmatchedRoute(notfound.FromQuery)
+	a.Route(setup.Path, a.WithDrawer(setup.FromQuery))
+	a.Route(dashboard.Path, a.WithDrawer(dashboard.FromQuery))
+	a.Route("/", a.WithDrawer(dashboard.FromQuery))
+	a.Application.Start()
 }
