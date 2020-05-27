@@ -12,10 +12,16 @@ package application
 
 import (
 	sql2 "database/sql"
+	"fmt"
 	_ "github.com/go-sql-driver/mysql" // mysql driver
 	srv "github.com/golangee/http"
 	"github.com/golangee/log"
+	v3 "github.com/golangee/openapi/v3"
 	"github.com/golangee/sql"
+	"github.com/golangee/swaggerui"
+	"github.com/worldiety/mercurius/build"
+	"net/http"
+	"strconv"
 
 	"github.com/worldiety/mercurius/internal/config"
 	"github.com/worldiety/mercurius/internal/service/setup"
@@ -84,5 +90,21 @@ func (a *Server) StartDev(frontendDir string) {
 }
 
 func (a *Server) initControllers(server *srv.Server) {
-	srv.MustNewController(server, setup.NewRestController(a))
+	ctr := srv.MustNewController(server, setup.NewRestController(a))
+
+	doc := v3.NewDocument()
+	doc.Info.Version = build.Commit
+	doc.Info.Title = "mercurius"
+	doc.Servers = []v3.Server{
+		{Url: "http://localhost:" + strconv.Itoa(a.settings.Server.Port)},
+	}
+	ctr.OpenAPI(&doc)
+
+	server.Handle("GET", "/api/doc/*path", func(writer http.ResponseWriter, request *http.Request, params srv.KeyValues) error {
+		handler := swaggerui.Handler("/api/doc/", doc.String())
+		handler(writer, request)
+		return nil
+	})
+	fmt.Println(doc.String())
+
 }

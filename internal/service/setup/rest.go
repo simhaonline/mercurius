@@ -19,8 +19,17 @@ type Reloader interface {
 	Reload()
 }
 
+// Status represents the current setup status.
+type Status struct {
+	// status id
+	Id int
+	// a textual representation as a developer notice
+	Message string
+}
+
 // @ee.http.Controller
 // @ee.http.Route("/api/v1/setup")
+// @ee.stereotype.Controller("setup")
 type RestController struct {
 	ctr Reloader
 }
@@ -29,9 +38,10 @@ func NewRestController(ctr Reloader) *RestController {
 	return &RestController{ctr}
 }
 
-
+// Status returns the current setup status. This is usually only relevant in the installation phase.
+//
 // @ee.http.Route("/status")
 // @ee.http.Method("GET")
-func (s *RestController) Status(res http.ResponseWriter, req *http.Request) {
-	res.Write([]byte("hello world"))
+func (s *RestController) Status(res http.ResponseWriter, req *http.Request) []Status {
+	return []Status{{Id: -1, Message: "hello world"}}
 }
