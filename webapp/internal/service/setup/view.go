@@ -33,6 +33,8 @@ func NewContentView() *ContentView {
 
 		NewButton("check").AddClickListener(func(v View) {
 			go func() {
+				//client.NewMercuriusService("http://localhost:8080/","blub",nil)
+
 				res, err := http.Get("/api/v1/setup/status")
 				if err != nil {
 					ShowMessage(v, err.Error())

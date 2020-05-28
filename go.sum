@@ -11,6 +11,8 @@ github.com/golangee/bundle v0.0.0-20200525165937-7528aa224e2f h1:vSRj44rIwd+Rt7d
 github.com/golangee/bundle v0.0.0-20200525165937-7528aa224e2f/go.mod h1:G0RhjlyMnol/t4gBYpIhghqTsJsW08QkkQVkkB50AWE=
 github.com/golangee/forms v0.0.0-20200518162453-b89914aa6b82 h1:vu6xPN/hTDTy3qq0kiG5V/rdhUCw9KW/u4Wur7hur7g=
 github.com/golangee/forms v0.0.0-20200518162453-b89914aa6b82/go.mod h1:rPS5UDs4pXTKBDV/gJjuYI7huMREaBodCg41LRsKw3g=
+github.com/golangee/openapi-client v0.0.0-20200527180241-0e4ef2fdcaae h1:mHchxyoozVpgji5U/RoS4qTBYlC6MS+n55BQRYipPdo=
+github.com/golangee/openapi-client v0.0.0-20200527180241-0e4ef2fdcaae/go.mod h1:efRO6Kbh48HK4E3M5i/Rtqi0bKiuQMouStCesZv39gk=
 github.com/golangee/swaggerui v0.0.0-20200527133316-c7b17725bfc5 h1:Kea7RNGSC/2dXSVy125+2BlaWYCBGfw/GORgPEuQ03I=
 github.com/golangee/swaggerui v0.0.0-20200527133316-c7b17725bfc5/go.mod h1:kNViTlr71pkdJiPH7o+I7wJZforJ/ziLxK9sPBeotBo=
 github.com/google/renameio v0.1.0/go.mod h1:KWCgfxg9yswjAJkECMjeO8J8rahYeXnNhOm40UhjYkI=
