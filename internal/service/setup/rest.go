@@ -43,5 +43,12 @@ func NewRestController(ctr Reloader) *RestController {
 // @ee.http.Route("/status")
 // @ee.http.Method("GET")
 func (s *RestController) Status(res http.ResponseWriter, req *http.Request) []Status {
-	return []Status{{Id: -1, Message: "hello world"}}
+	var r []Status
+	for _, err := range s.ctr.ReloadStatus() {
+		r = append(r, Status{
+			Id:      0,
+			Message: err.Error(),
+		})
+	}
+	return r
 }

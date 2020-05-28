@@ -86,7 +86,9 @@ func (a *Server) StartDev(frontendDir string) {
 }
 
 func (a *Server) initControllers(server *srv.Server) {
-	_ = srv.MustNewController(server, setup.NewRestController(a))
+	inject := NewInjectionContext(a)
+	srv.MustNewController(server, inject.SetupController())
+	srv.MustNewController(server, inject.SMSController())
 
 	doc := resources.Bundle.Find(resources.DocOpenapiApidocJson)
 

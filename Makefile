@@ -42,7 +42,7 @@ lint: ## Executes all linters
 test: ## Executes the tests
 	${GO} test -race ./...
 
-.PHONY: build generate setup
+.PHONY: build generate setup run
 
 build: buildWebApp ## Performs a build and puts everything into the build directory
 	${GO} build -ldflags "${LDFLAGS}" -o ${BUILD_DIR}/${ARTIFACT_NAME} ${MAIN_PATH}
