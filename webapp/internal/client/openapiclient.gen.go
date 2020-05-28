@@ -28,11 +28,11 @@ type MercuriusService struct {
 }
 
 // NewMercuriusService creates a new service instance. If httpClient is nil, the default client is used.
-func NewMercuriusService(baseURL *url.URL, userAgent string, httpClient *http.Client) *Client {
+func NewMercuriusService(baseURL *url.URL, userAgent string, httpClient *http.Client) *MercuriusService {
 	if httpClient == nil {
 		httpClient = http.DefaultClient
 	}
-	return &Client{baseURL: baseURL, httpClient: httpClient, userAgent: userAgent}
+	return &MercuriusService{baseURL: baseURL, httpClient: httpClient, userAgent: userAgent}
 }
 
 func (s *MercuriusService) newRequest(ctx context.Context, method, path, contentType, accept string, body io.Reader) (*http.Request, error) {
@@ -77,7 +77,7 @@ type SetupService struct {
 func (_self SetupService) syncApiV1SetupStatus(_ctx context.Context) ([]Status, error) {
 	var _res []Status
 	path := fmt.Sprintf("/api/v1/setup/status")
-	_req, _err := _self.parent.newRequest(_ctx, GET, path, "", "application/json", nil)
+	_req, _err := _self.parent.newRequest(_ctx, "GET", path, "", "application/json", nil)
 	if _err != nil {
 		return _res, _err
 	}
@@ -88,7 +88,7 @@ func (_self SetupService) syncApiV1SetupStatus(_ctx context.Context) ([]Status, 
 // Status returns the current setup status. This is usually only relevant in the installation phase.
 func (_self SetupService) ApiV1SetupStatus(_ctx context.Context, f func(res []Status, err error)) {
 	go func() {
-		res, err := syncApiV1SetupStatus(_ctx)
+		res, err := _self.syncApiV1SetupStatus(_ctx)
 		f(res, err)
 	}()
 }

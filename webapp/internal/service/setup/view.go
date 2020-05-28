@@ -12,8 +12,8 @@ package setup
 
 import (
 	. "github.com/golangee/forms"
-	"io/ioutil"
-	"net/http"
+	"github.com/worldiety/mercurius/webapp/internal/client"
+	"strconv"
 )
 
 const Path = "/setup"
@@ -33,24 +33,12 @@ func NewContentView() *ContentView {
 
 		NewButton("check").AddClickListener(func(v View) {
 			go func() {
-				//client.NewMercuriusService("http://localhost:8080/","blub",nil)
-
-				res, err := http.Get("/api/v1/setup/status")
-				if err != nil {
-					ShowMessage(v, err.Error())
-					return
-				}
-				defer res.Body.Close()
-				b, err := ioutil.ReadAll(res.Body)
-				if err != nil {
-					ShowMessage(v, err.Error())
-					return
-				}
-				view.statusBox.RemoveAll()
-				view.statusBox.AddViews(
-					NewText(string(b)).Style(Font(Body)),
-				)
-
+				client.Service().SetupService().ApiV1SetupStatus(view.Scope(), func(res []client.Status, err error) {
+					view.statusBox.RemoveAll()
+					for _,status := range res{
+						view.statusBox.AddViews(NewText("*"+strconv.Itoa(status.Id)+":"+status.Message).Style(Font(Body)))
+					}
+				})
 			}()
 
 
