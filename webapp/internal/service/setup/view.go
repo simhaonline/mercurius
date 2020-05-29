@@ -12,7 +12,10 @@ package setup
 
 import (
 	. "github.com/golangee/forms"
+	"github.com/golangee/log"
 	"github.com/worldiety/mercurius/webapp/internal/client"
+	"github.com/worldiety/mercurius/webapp/internal/service/errors"
+	"reflect"
 	"strconv"
 )
 
@@ -31,16 +34,17 @@ func NewContentView() *ContentView {
 		NewVStack().Self(&view.statusBox),
 
 
-		NewButton("check").AddClickListener(func(v View) {
-			go func() {
-				client.Service().SetupService().ApiV1SetupStatus(view.Scope(), func(res []client.Status, err error) {
-					view.statusBox.RemoveAll()
-					for _,status := range res{
-						view.statusBox.AddViews(NewText("*"+strconv.Itoa(status.Id)+":"+status.Message).Style(Font(Body)))
-					}
-				})
-			}()
+		NewButton("check2").AddClickListener(func(v View) {
+			view.statusBox.AddViews(NewCircularProgress())
+			client.Service().SetupService().ApiV1SetupStatus(view.Scope(), func(res []client.Status, err error) {
+				log.New("setup").Info("view", log.Obj("err", err), log.Obj("nil", err == nil), log.Obj("ref", reflect.TypeOf(err)))
+				errors.HandleError(view, err)
+				view.statusBox.RemoveAll()
+				for _, status := range res {
+					view.statusBox.AddViews(NewText("*" + strconv.Itoa(status.Id) + ":" + status.Message).Style(Font(Body)))
+				}
 
+			})
 
 		}),
 

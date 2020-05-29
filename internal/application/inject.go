@@ -6,31 +6,31 @@ import (
 	"github.com/worldiety/mercurius/internal/service/sms"
 )
 
-// InjectionContext is something what happens in java spring boot completely opaque. This is something
+// InjectionContainer is something what happens in java spring boot completely opaque. This is something
 // which is neither hard nor a bad thing to maintain, quite the contrary.
-type InjectionContext struct {
+type InjectionContainer struct {
 	server               *Server
 	setupController      *setup.RestController
 	smsController        *sms.RestController
 	smsMessageRepository sms.MessageRepository
 }
 
-func NewInjectionContext(server *Server) *InjectionContext {
-	return &InjectionContext{server: server}
+func NewInjectionContext(server *Server) *InjectionContainer {
+	return &InjectionContainer{server: server}
 }
 
-func (i *InjectionContext) SetupReloader() setup.Reloader {
+func (i *InjectionContainer) SetupReloader() setup.Reloader {
 	return i.server
 }
 
-func (i *InjectionContext) SetupController() *setup.RestController {
+func (i *InjectionContainer) SetupController() *setup.RestController {
 	if i.setupController == nil {
 		i.setupController = setup.NewRestController(i.SetupReloader())
 	}
 	return i.setupController
 }
 
-func (i *InjectionContext) SMSMessageRepository() sms.MessageRepository {
+func (i *InjectionContainer) SMSMessageRepository() sms.MessageRepository {
 	if i.smsMessageRepository == nil {
 		dialect := i.server.settings.Database.Dialect()
 		if err := sql.NewRepository(dialect, &i.smsMessageRepository); err != nil {
@@ -41,7 +41,7 @@ func (i *InjectionContext) SMSMessageRepository() sms.MessageRepository {
 	return i.smsMessageRepository
 }
 
-func (i *InjectionContext) SMSController() *sms.RestController {
+func (i *InjectionContainer) SMSController() *sms.RestController {
 	if i.smsController == nil {
 		i.smsController = sms.NewRestController(i.SMSMessageRepository())
 	}

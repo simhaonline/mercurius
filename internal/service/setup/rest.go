@@ -11,7 +11,10 @@
 package setup
 
 import (
+	"fmt"
+	"io"
 	"net/http"
+	"time"
 )
 
 type Reloader interface {
@@ -42,7 +45,7 @@ func NewRestController(ctr Reloader) *RestController {
 //
 // @ee.http.Route("/status")
 // @ee.http.Method("GET")
-func (s *RestController) Status(res http.ResponseWriter, req *http.Request) []Status {
+func (s *RestController) Status(res http.ResponseWriter, req *http.Request) ([]Status, error) {
 	var r []Status
 	for _, err := range s.ctr.ReloadStatus() {
 		r = append(r, Status{
@@ -50,5 +53,6 @@ func (s *RestController) Status(res http.ResponseWriter, req *http.Request) []St
 			Message: err.Error(),
 		})
 	}
-	return r
+	time.Sleep(2 * time.Second)
+	return r, fmt.Errorf("failed test badly: %w", io.EOF)
 }
