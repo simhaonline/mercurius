@@ -12,6 +12,7 @@ package application
 
 import (
 	sql2 "database/sql"
+	"fmt"
 	_ "github.com/go-sql-driver/mysql" // mysql driver
 	srv "github.com/golangee/http"
 	"github.com/golangee/log"
@@ -22,6 +23,7 @@ import (
 	"github.com/worldiety/mercurius/internal/service/setup"
 	"net/http"
 	"os"
+	"strings"
 )
 
 type Server struct {
@@ -86,6 +88,7 @@ func (a *Server) StartDev(frontendDir string) {
 }
 
 func (a *Server) initControllers(server *srv.Server) {
+	server.Use(a.globalApiStatus)
 	inject := NewInjectionContext(a)
 	srv.MustNewController(server, inject.SetupController())
 	srv.MustNewController(server, inject.SMSController())
@@ -97,4 +100,15 @@ func (a *Server) initControllers(server *srv.Server) {
 		handler(writer, request)
 		return nil
 	})
+}
+
+// globalApiStatus may reject all calls to api endpoints, e.g. if the service has not been configured correctly.
+func (a *Server) globalApiStatus(handler srv.Handler) srv.Handler {
+	return func(writer http.ResponseWriter, request *http.Request, params srv.KeyValues) error {
+		if len(a.configurationErrors) > 0 && strings.HasPrefix(request.URL.Path, "/api/v1/") {
+			return a.configurationErrors[0]
+		}
+		fmt.Println(request.URL.Path)
+		return handler(writer, request, params)
+	}
 }

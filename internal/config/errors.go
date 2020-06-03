@@ -10,12 +10,22 @@
 
 package config
 
+const (
+	ConfigurationMissing = "hg.configuration.missing"
+	ConfigurationInvalid = "hg.configuration.invalid"
+	DatabaseUnreachable  = "hg.database.unreachable"
+)
+
 // FirstTimeSetupError indicates that a setup has never been made (clean install).
 type FirstTimeSetupError struct {
 }
 
 func (f FirstTimeSetupError) Error() string {
 	return "first time setup required"
+}
+
+func (f FirstTimeSetupError) ID() string {
+	return ConfigurationMissing
 }
 
 // NoDatabaseError indicates a missing database or wrong credentials
@@ -31,6 +41,10 @@ func (f NoDatabaseError) Unwrap() error {
 	return f.Cause
 }
 
+func (f NoDatabaseError) ID() string {
+	return DatabaseUnreachable
+}
+
 // InvalidConfigurationError indicates that a setup was made but is broken
 type InvalidConfigurationError struct {
 	Cause error
@@ -42,4 +56,8 @@ func (f InvalidConfigurationError) Error() string {
 
 func (f InvalidConfigurationError) Unwrap() error {
 	return f.Cause
+}
+
+func (f InvalidConfigurationError) ID() string {
+	return ConfigurationInvalid
 }

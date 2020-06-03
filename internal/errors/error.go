@@ -8,8 +8,9 @@
 //
 // Authors: Torben Schinke
 
-
 package errors
+
+
 
 // Try executes the given func and updates the error,
 // but only if it has not been set yet.

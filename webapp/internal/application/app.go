@@ -80,9 +80,25 @@ func (a *App) WithDrawer(f func(q Query) View) func(Query) View {
 	}
 }
 
+func NoDrawer(f func(q Query) View) func(Query) View {
+	return func(query Query) View {
+		v := NewGroup(NewCard(f(query)).Style(
+			Padding(),
+			CenterHorizontal(),
+			MaxWidth(Pixel(200))),
+		).Style(
+			Padding(),
+			Width(Percent(100)),
+			Height(Percent(100)),
+			BackgroundColor(RGB(50, 50, 50)),
+		)
+		return v
+	}
+}
+
 func (a *App) Start() {
 	a.UnmatchedRoute(notfound.FromQuery)
-	a.Route(setup.Path, a.WithDrawer(setup.FromQuery))
+	a.Route(setup.Path, NoDrawer(setup.FromQuery))
 	a.Route(dashboard.Path, a.WithDrawer(dashboard.FromQuery))
 	a.Route("/", a.WithDrawer(dashboard.FromQuery))
 	a.Application.Start()

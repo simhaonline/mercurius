@@ -43,7 +43,7 @@ test: ## Executes the tests
 
 .PHONY: build generate setup
 
-build: ## Performs a build and puts everything into the build directory
+build: generate## Performs a build and puts everything into the build directory
 	GOOS=js GOARCH=wasm ${GO} build -ldflags "${LDFLAGS}" -o ${BUILD_DIR}/app.wasm ${MAIN_PATH}
 
 	$(shell echo "{\"Time\":\"${currentDate}\",\"Commit\":\"${currentCommit}\"}" > ${BUILD_DIR}/version )

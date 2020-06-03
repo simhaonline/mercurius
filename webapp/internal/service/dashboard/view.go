@@ -12,13 +12,19 @@ package dashboard
 
 import (
 	. "github.com/golangee/forms"
+	"github.com/golangee/log"
+	"github.com/worldiety/mercurius/webapp/internal/client"
+	"github.com/worldiety/mercurius/webapp/internal/service/errors"
+	"reflect"
+	"strconv"
 )
 
 const Path = "/dashboard"
 
 type ContentView struct {
 	*VStack
-	btn *Button
+	statusBox *VStack
+	btn       *Button
 }
 
 func NewContentView() *ContentView {
@@ -26,7 +32,19 @@ func NewContentView() *ContentView {
 	view.VStack = NewVStack().AddViews(
 		NewText("your dashboard").Style(Font(Headline2)),
 		NewText("your account").Style(Font(Body)),
+		NewVStack().Self(&view.statusBox),
+		NewButton("check2").AddClickListener(func(v View) {
+			view.statusBox.AddViews(NewCircularProgress())
+			client.Service().SetupService().ApiV1SetupStatus(view.Scope(), func(res []client.Status, err error) {
+				log.New("setup").Info("view", log.Obj("err", err), log.Obj("nil", err == nil), log.Obj("ref", reflect.TypeOf(err)))
+				errors.HandleError(view, err)
+				view.statusBox.RemoveAll()
+				for _, status := range res {
+					view.statusBox.AddViews(NewText("*" + strconv.Itoa(status.Id) + ":" + status.Message).Style(Font(Body)))
+				}
 
+			})
+		}),
 	)
 	return view
 }
