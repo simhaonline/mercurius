@@ -21,18 +21,14 @@ const Path = "/setup"
 
 type ContentView struct {
 	*VStack
+	tabView *TabView
 }
 
 func NewContentView() *ContentView {
 	values := NewResources(locale.Language())
-
+	_ = values
 	view := &ContentView{}
-	view.VStack = NewVStack().AddViews(
-
-		NewText("setup").Style(Font(Headline3)),
-
-
-	)
+	view.VStack = NewVStack()
 
 	client.Service().SetupService().ApiV1SetupStatus(view.Scope(), func(res []client.Status, err error) {
 		if client.FindError(err, errors.MercuriusConfigurationMissing) == nil {
@@ -42,10 +38,11 @@ func NewContentView() *ContentView {
 		}
 
 		view.VStack.AddViews(
-			NewTabView().SetTabs(
-				NewTab(values.SetupTitleLicense(), NewText(values.SetupLicense())),
-			),
-		)
+			NewHStack(NewText("header")).SetHorizontalAlign(Center).Style(BackgroundColor(Gray50)),
+			NewText("stepper").Style(BackgroundColor(Yellow50)),
+			NewText("content").Style(BackgroundColor(Blue50)),
+			NewHStack(NewButton("next").SetStyleKind(Raised)).SetHorizontalAlign(End).Style(BackgroundColor(Red50)),
+		).Style(Height(Percent(100))).SetRowHeights(Auto(), Auto(), Fraction(1), Auto())
 	})
 
 	return view

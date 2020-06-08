@@ -33,6 +33,7 @@ database:
  host: localhost # the host of the database
  port: 3306 # port of the db
  user: # the database user
+ password: # the password of the user
  databaseName: # the database name
  sslMode: preferred # 0=preferred, 1=disabled, 2=required, 3=verify_ca, 4=verify_identity
 

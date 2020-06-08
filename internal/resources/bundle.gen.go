@@ -8,7 +8,7 @@ import (
 )
 
 // BundleVersion contains the hash of all embedded files and their bundle options.
-const BundleVersion = "1111fe20e95516072c00d103253cf3ba8c70c3d7b173a74fcc351da9792073b4"
+const BundleVersion = "d4875fe9d9ea0f78825aca6d290250603652aa8faf4fa7d0d31dbc3157e80886"
 
 const (
 	DocOpenapiApidocJson = "/doc/openapi/apidoc.json"
@@ -17,7 +17,7 @@ const (
 // Bundle contains all embedded named resources.
 var Bundle = bundle.Make(
 
-	bundle.NewResource("/doc/openapi/apidoc.json", 890, 493, time.Unix(1590658037, 106132765), "def2e0876b958c86ee37d0d3b206061a5baeff7fa16ce6105065df233d02f7f4", true, true, true, blob_def2e0876b958c86ee37d0d3b206061a5baeff7fa16ce6105065df233d02f7f4),
+	bundle.NewResource("/doc/openapi/apidoc.json", 2714, 493, time.Unix(1591282743, 289140636), "5f586cec4648f359c80cbd8dcd2e1ad7c261a8a21a1df75c56cd989d22b51c94", true, true, true, blob_5f586cec4648f359c80cbd8dcd2e1ad7c261a8a21a1df75c56cd989d22b51c94),
 )
 
-const blob_def2e0876b958c86ee37d0d3b206061a5baeff7fa16ce6105065df233d02f7f4 = ")gMN.*!^Y^cV5AgCpTFTWC?Nj[_b8:[T&Z=7+f81L.:BQ,1\\e+?%)bP=s+3Y\\3Th(qmn?tA>AY?!?Ps/l/diAD\\'3TH8UW\"6TkSpga7`=Z0\"=$>9H935oFkFfVN(RK\\q<r$[>jggLD,5!p4^T!rLZ!hJHNgV%;1)6uJ3'3XD7i<5GS#*\"Hi;h,pP0_LYcL3eZB+fUTcP>C+bT4>gW1%BJ`I!R0P,aZS8X;[=1]@m+<`7\\\\c'7r&be,%*s/:o\"p7A&rsU(LSu0.qT@+\"+]fi+:,$,D&5[!,F%t4D\"c;Sbo\\6RJHdOCeA8R1i\",sW6NZoqONG'>!eZ\\0c_$6;dJA,,]IQO0gBNA:mmaXpmWR08d4I83g/m'*%!EeY%j<$Qgj)>SI2EmA:?$@d7dh+PG%iq;EgF\"CL6B3.d9^o!*W"
+const blob_5f586cec4648f359c80cbd8dcd2e1ad7c261a8a21a1df75c56cd989d22b51c94 = ")jq$5*!^XCf>:q%E/Do;aO]2u<Mu*L*Z^r=3]`JJ0W*fZhPgGP,J,mm:01eLg9:/Wkq8,KQ(\"(cZQITnLPR=@mOhu&MJ+SpQEW(`'G6Ch*d_/frT\"?HL3Y>NnfI&Q#W=0I@<tZJ;mIhse6g&e<q$N;Y@29?*@AS.)dp&Ej/on^`XaE]1A)s3d:e#*f%E<:_=)]%HK1S!d<^:?MuQnLp1!;&<%9F\"&F#)18VF<*s44_h@'fo,DVYeIN!9KhZa(\\9Zp](0%op$2T#_g.p^!>:'(-t:+W0/#k-(\"PnJ&C&mIhYLK\\oeRP1Cuf16Vq=QfUosnb<Xho$l^6\"j9f>:b$>iE,Kg2`4.):SrX2CRo-n='ppb_AW1Jr!M8$Q];tMU/X`rF)#g:i0p7NQLp#_\\=eT4kYT\\G0XPp[>Fg*TP4O7SIM1c4[[AD,:5!i)<iq^p+Kq1k)$4ZtcTYk^Da.^m_UoM-<Jd;:,@JoZ$345=N[`2)MOLQh0*pEEa*[r]s98S`\\lEp?%dhp)t3KereCs9'AAIp9h<h:T'V6%mak7U'STeJ'e1io[b>5(MU-qdH,>-F]k'Fr`lM6g-$J`F4#]l\\iun.>2Bm)%:2@CrcEK36B^%XDK\\((-/LP9qj7?s'sH$?tcKF4?5N((W?93ZOnePNt\"<-/.^N(D+sM:bC1<i)Aeu:lO(1A[pT-=81GHX0bL[M:s(V6%)X$+#+!N%oO$nT6hZ(VDTt:;;*'je(Z'sP<9['<KnmRBM(,`AG/Q?*Z]%oYLG+1MJXB5J'W];;346$:1\\17]n\"7EYLFee,e^`OSPW1!gJVX.P(C[M.6[b'CrsRi]8;9\\1O)Ge[&9XBipD_/@#sL1X^W,(]1Uj*LW\\]6e.(1-1+-\\ToQ-54GOB^R=u'>%.-/hmit]Ja]b4:Yk8pT.]o>MT9ubai92F&tK9l%Cqsi@#&#.UkK40tITu!jNQ9Sbr4o3);D\"V?eCWJ1V)RuYs//S4&A4N`3@-T++P>)1N)[V6;*8F[>'*"

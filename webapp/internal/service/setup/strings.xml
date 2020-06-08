@@ -1,4 +1,9 @@
 <resources>
+    <string name="setup_title_welcome">welcome to mercurius</string>
+    <string name="setup_welcome">welcome to the mercurius login service setup.
+
+        This is the first time to launched your service and we need only a few
+        more information to get it up and running.</string>
     <string name="setup_title_license">license</string>
     <string name="setup_license">worldiety Enterprise Edition (EE) License (the "EE License")
         Copyright (c) 2020 worldiety GmbH
@@ -18,4 +23,6 @@
 
         Used components of third parties, which are integrated into the worldiety software, remain under the respective
         Original license of the respective licensor.</string>
+
+    <string name="btn_next">next</string>
 </resources>

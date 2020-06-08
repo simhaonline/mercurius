@@ -85,7 +85,7 @@ func NoDrawer(f func(q Query) View) func(Query) View {
 		v := NewGroup(NewCard(f(query)).Style(
 			Padding(),
 			CenterHorizontal(),
-			MaxWidth(Pixel(200))),
+			MaxWidth(Pixel(800))),
 		).Style(
 			Padding(),
 			Width(Percent(100)),
@@ -96,9 +96,23 @@ func NoDrawer(f func(q Query) View) func(Query) View {
 	}
 }
 
+func NoDrawerFixedBox(window *Window, f func(q Query) View) func(Query) View {
+	return func(query Query) View {
+		v := NewVStack(
+			NewCard(f(query)).
+				Style(Width(Pixel(1200)), Height(Pixel(670))),
+
+		).Style(Height(Percent(100))).Grid.SetVerticalAlign(Center).SetHorizontalAlign(Center)
+		window.SetBackground("/hg/img/background-01.jpg")
+		return v
+	}
+}
+
 func (a *App) Start() {
+	Theme().SetColor(0x1b8c30ff)
+
 	a.UnmatchedRoute(notfound.FromQuery)
-	a.Route(setup.Path, NoDrawer(setup.FromQuery))
+	a.Route(setup.Path, NoDrawerFixedBox(a.Window(), setup.FromQuery))
 	a.Route(dashboard.Path, a.WithDrawer(dashboard.FromQuery))
 	a.Route("/", a.WithDrawer(dashboard.FromQuery))
 	a.Application.Start()
