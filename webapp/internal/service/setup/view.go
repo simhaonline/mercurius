@@ -13,6 +13,8 @@ package setup
 import (
 	. "github.com/golangee/forms"
 	"github.com/golangee/forms/locale"
+	"github.com/golangee/forms/theme/material/icon"
+	. "github.com/golangee/forms/views/hstepper"
 	"github.com/worldiety/mercurius/webapp/internal/client"
 	"github.com/worldiety/mercurius/webapp/internal/service/errors"
 )
@@ -39,7 +41,12 @@ func NewContentView() *ContentView {
 
 		view.VStack.AddViews(
 			NewHStack(NewText("header")).SetHorizontalAlign(Center).Style(BackgroundColor(Gray50)),
-			NewText("stepper").Style(BackgroundColor(Yellow50)),
+			NewStepper(
+				NewIconStep(icon.Assignment, "License"),
+				NewIconStep(icon.Storage, "Database"),
+				NewIconStep(icon.Folder, "File storage"),
+				NewIconStep(icon.Settings, "http"),
+			).Style(BackgroundColor(Yellow50)).SetProgress(2),
 			NewText("content").Style(BackgroundColor(Blue50)),
 			NewHStack(NewButton("next").SetStyleKind(Raised)).SetHorizontalAlign(End).Style(BackgroundColor(Red50)),
 		).Style(Height(Percent(100))).SetRowHeights(Auto(), Auto(), Fraction(1), Auto())

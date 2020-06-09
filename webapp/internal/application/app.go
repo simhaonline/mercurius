@@ -80,27 +80,13 @@ func (a *App) WithDrawer(f func(q Query) View) func(Query) View {
 	}
 }
 
-func NoDrawer(f func(q Query) View) func(Query) View {
-	return func(query Query) View {
-		v := NewGroup(NewCard(f(query)).Style(
-			Padding(),
-			CenterHorizontal(),
-			MaxWidth(Pixel(800))),
-		).Style(
-			Padding(),
-			Width(Percent(100)),
-			Height(Percent(100)),
-			BackgroundColor(RGB(50, 50, 50)),
-		)
-		return v
-	}
-}
 
 func NoDrawerFixedBox(window *Window, f func(q Query) View) func(Query) View {
 	return func(query Query) View {
 		v := NewVStack(
 			NewCard(f(query)).
-				Style(Width(Pixel(1200)), Height(Pixel(670))),
+				Style(Width(Pixel(1200)), Height(Pixel(670))).
+				StyleFor(MatchOne(MatchMaxWidth(Pixel(1200)), MatchMaxHeight(Pixel(670))), Width(PercentViewPortWidth(100)), Height(PercentViewPortHeight(100))),
 
 		).Style(Height(Percent(100))).Grid.SetVerticalAlign(Center).SetHorizontalAlign(Center)
 		window.SetBackground("/hg/img/background-01.jpg")
