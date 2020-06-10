@@ -1,9 +1,17 @@
 <resources>
     <string name="setup_title_welcome">welcome to mercurius</string>
-    <string name="setup_welcome">welcome to the mercurius login service setup.
+    <string name="setup_welcome">Welcome to the setup wizard for the login service.
+        In The following steps the basic configurations for the service are carried out.
 
-        This is the first time to launched your service and we need only a few
-        more information to get it up and running.</string>
+        After you have accepted the license agreements and made the necessary
+        configurations, the wizard initializes and starts the login service for your
+        environment.
+
+        After completion, it is possible to create users with different clients and
+        initialize sessions for them.
+
+        You can retun to the previous steps at any time to make adjustments to your settings.
+    </string>
     <string name="setup_title_license">license</string>
     <string name="setup_license">worldiety Enterprise Edition (EE) License (the "EE License")
         Copyright (c) 2020 worldiety GmbH
@@ -25,4 +33,5 @@
         Original license of the respective licensor.</string>
 
     <string name="btn_next">next</string>
+    <string name="btn_accept">accept</string>
 </resources>

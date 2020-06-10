@@ -14,11 +14,12 @@ func init() {
 	// from strings.xml
 	tag = "und"
 
+	i18n.ImportValue(i18n.NewText(tag, "btn_accept", "accept"))
 	i18n.ImportValue(i18n.NewText(tag, "btn_next", "next"))
 	i18n.ImportValue(i18n.NewText(tag, "setup_license", "worldiety Enterprise Edition (EE) License (the \"EE License\")\n        Copyright (c) 2020 worldiety GmbH\n\n        This software and the associated documentation may only be used if you or the natural\n        or legal entity you represent, have a corresponding individual agreement with the worldiety GmbH\n        about the use of this software. Unless otherwise agreed, you have, after the completion of all outstanding payments,\n        a non-exclusive, worldwide, perpetual and irrevocable right to use the software. In addition, you are granted\n        permission, in accordance with the agreements made, to use the software and publish patches for the software.\n        In doing so, you agree that worldiety receives an exclusive, worldwide, unlimited and irrevocable right of use of\n        the modifications. This also applies in particular to commissioned modifications, which are carried out by third\n        parties or by worldiety within the scope of service or contracts for work and services arise.\n\n        You are not permitted to copy, merge or combine this software as an independent product,\n        to publish, distribute, sublicense or sell Deviating from this. Unaffected is your permission to copy, distribute,\n        sublicense or sell this software as auxiliary or accessory of your software product.\n\n        Used components of third parties, which are integrated into the worldiety software, remain under the respective\n        Original license of the respective licensor."))
 	i18n.ImportValue(i18n.NewText(tag, "setup_title_license", "license"))
 	i18n.ImportValue(i18n.NewText(tag, "setup_title_welcome", "welcome to mercurius"))
-	i18n.ImportValue(i18n.NewText(tag, "setup_welcome", "welcome to the mercurius login service setup.\n\n        This is the first time to launched your service and we need only a few\n        more information to get it up and running."))
+	i18n.ImportValue(i18n.NewText(tag, "setup_welcome", "Welcome to the setup wizard for the login service.\n        In The following steps the basic configurations for the service are carried out.\n\n        After you have accepted the license agreements and made the necessary\n        configurations, the wizard initializes and starts the login service for your\n        environment.\n\n        After completion, it is possible to create users with different clients and\n        initialize sessions for them.\n\n        You can retun to the previous steps at any time to make adjustments to your settings.\n    "))
 	_ = tag
 
 }
@@ -31,6 +32,15 @@ type Resources struct {
 // NewResources creates a new localized resource instance.
 func NewResources(locale string) Resources {
 	return Resources{i18n.From(locale)}
+}
+
+// BtnAccept returns a translated text for "accept"
+func (r Resources) BtnAccept() string {
+	str, err := r.res.Text("btn_accept")
+	if err != nil {
+		return fmt.Errorf("MISS!btn_accept: %w", err).Error()
+	}
+	return str
 }
 
 // BtnNext returns a translated text for "next"
@@ -89,10 +99,18 @@ func (r Resources) SetupTitleWelcome() string {
 }
 
 /*
-SetupWelcome returns a translated text for "welcome to the mercurius login service setup.
+SetupWelcome returns a translated text for "Welcome to the setup wizard for the login service.
+        In The following steps the basic configurations for the service are carried out.
 
-        This is the first time to launched your service and we need only a few
-        more information to get it up and running."
+        After you have accepted the license agreements and made the necessary
+        configurations, the wizard initializes and starts the login service for your
+        environment.
+
+        After completion, it is possible to create users with different clients and
+        initialize sessions for them.
+
+        You can retun to the previous steps at any time to make adjustments to your settings.
+    "
 */
 func (r Resources) SetupWelcome() string {
 	str, err := r.res.Text("setup_welcome")
@@ -105,6 +123,7 @@ func (r Resources) SetupWelcome() string {
 // FuncMap returns the named functions to be used with a template
 func (r Resources) FuncMap() map[string]interface{} {
 	m := make(map[string]interface{})
+	m["BtnAccept"] = r.BtnAccept
 	m["BtnNext"] = r.BtnNext
 	m["SetupLicense"] = r.SetupLicense
 	m["SetupTitleLicense"] = r.SetupTitleLicense

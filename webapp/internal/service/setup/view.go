@@ -23,14 +23,21 @@ const Path = "/setup"
 
 type ContentView struct {
 	*VStack
-	tabView *TabView
+	tabView      *TabView
+	content      *Frame
+	currentIndex int
+	stepper      *Stepper
+	title        *Text
+	strings      Resources
+	btnNext      *Button
 }
 
 func NewContentView() *ContentView {
-	values := NewResources(locale.Language())
-	_ = values
+
 	view := &ContentView{}
 	view.VStack = NewVStack()
+	view.currentIndex = 1
+	view.strings = NewResources(locale.Language())
 
 	client.Service().SetupService().ApiV1SetupStatus(view.Scope(), func(res []client.Status, err error) {
 		if client.FindError(err, errors.MercuriusConfigurationMissing) == nil {
@@ -40,19 +47,47 @@ func NewContentView() *ContentView {
 		}
 
 		view.VStack.AddViews(
-			NewHStack(NewText("header")).SetHorizontalAlign(Center).Style(BackgroundColor(Gray50)),
+			NewHStack(NewText("header").
+				Self(&view.title).
+				Style(Font(Headline2), Margin()),
+			).SetHorizontalAlign(Center),
 			NewStepper(
+				NewIconStep(icon.AirlineSeatFlat, "welcome"),
 				NewIconStep(icon.Assignment, "License"),
 				NewIconStep(icon.Storage, "Database"),
 				NewIconStep(icon.Folder, "File storage"),
 				NewIconStep(icon.Settings, "http"),
-			).Style(BackgroundColor(Yellow50)).SetProgress(2),
-			NewText("content").Style(BackgroundColor(Blue50)),
-			NewHStack(NewButton("next").SetStyleKind(Raised)).SetHorizontalAlign(End).Style(BackgroundColor(Red50)),
+			).Self(&view.stepper).SetProgress(view.currentIndex),
+			NewFrame().Self(&view.content),
+			NewHStack(
+				NewButton("next").
+					Self(&view.btnNext).
+					SetStyleKind(Raised).
+					AddClickListener(func(v View) {
+						view.NextAction()
+					}),
+			).Style(Padding()).SetHorizontalAlign(Center),
 		).Style(Height(Percent(100))).SetRowHeights(Auto(), Auto(), Fraction(1), Auto())
+
+		view.ShowWelcome()
 	})
 
 	return view
+}
+
+func (t *ContentView) NextAction() {
+	t.currentIndex++
+	t.stepper.SetProgress(t.currentIndex)
+	switch t.currentIndex {
+	case 2:
+
+	}
+}
+
+func (t *ContentView) ShowWelcome() {
+	t.title.Set(t.strings.SetupTitleWelcome())
+	t.content.SetView(NewWelcomeView())
+	t.btnNext.SetText(t.strings.BtnAccept())
 }
 
 func FromQuery(Query) View {
