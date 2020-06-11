@@ -10,5 +10,5 @@ func NewWelcomeView() View {
 
 	return NewVStack(
 		NewText(values.SetupWelcome()),
-	)
+	).SetHorizontalAlign(Center)
 }

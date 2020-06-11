@@ -12,26 +12,56 @@
 
         You can retun to the previous steps at any time to make adjustments to your settings.
     </string>
-    <string name="setup_title_license">license</string>
+    <string name="setup_title_license">license agreement</string>
     <string name="setup_license">worldiety Enterprise Edition (EE) License (the "EE License")
         Copyright (c) 2020 worldiety GmbH
 
         This software and the associated documentation may only be used if you or the natural
         or legal entity you represent, have a corresponding individual agreement with the worldiety GmbH
-        about the use of this software. Unless otherwise agreed, you have, after the completion of all outstanding payments,
+        about the use of this software. Unless otherwise agreed, you have, after the completion of all outstanding
+        payments,
         a non-exclusive, worldwide, perpetual and irrevocable right to use the software. In addition, you are granted
         permission, in accordance with the agreements made, to use the software and publish patches for the software.
-        In doing so, you agree that worldiety receives an exclusive, worldwide, unlimited and irrevocable right of use of
+        In doing so, you agree that worldiety receives an exclusive, worldwide, unlimited and irrevocable right of use
+        of
         the modifications. This also applies in particular to commissioned modifications, which are carried out by third
         parties or by worldiety within the scope of service or contracts for work and services arise.
 
         You are not permitted to copy, merge or combine this software as an independent product,
-        to publish, distribute, sublicense or sell Deviating from this. Unaffected is your permission to copy, distribute,
+        to publish, distribute, sublicense or sell Deviating from this. Unaffected is your permission to copy,
+        distribute,
         sublicense or sell this software as auxiliary or accessory of your software product.
 
         Used components of third parties, which are integrated into the worldiety software, remain under the respective
-        Original license of the respective licensor.</string>
+        Original license of the respective licensor.
+    </string>
+
+
+    <string name="setup_title_db">database</string>
+    <string name="setup_driver">driver</string>
+    <string name="setup_db_host">database host</string>
+    <string name="setup_db_name">database name</string>
+    <string name="setup_port">port</string>
+    <string name="setup_user">user</string>
+    <string name="setup_path">path</string>
+    <string name="setup_ssl_mode">SSL mode</string>
+    <string name="setup_password">password</string>
+    <string name="setup_title_blobs">blob store</string>
+    <string name="setup_title_http">http configuration</string>
+    <string name="setup_http_address">http bind address</string>
+    <string name="setup_title_applying">setting up...</string>
+    <string name="setup_title_finished">configuration finished</string>
+    <string name="setup_title_failed">configuration failed</string>
+
+    <string name="setup_stepper_welcome">welcome</string>
+    <string name="setup_stepper_database">database</string>
+    <string name="setup_stepper_storage">storage</string>
+    <string name="setup_stepper_http">http</string>
+    <string name="setup_stepper_license">license</string>
 
     <string name="btn_next">next</string>
+    <string name="btn_back">back</string>
     <string name="btn_accept">accept</string>
+    <string name="btn_start">start</string>
+    <string name="btn_apply">apply</string>
 </resources>
