@@ -17,8 +17,9 @@ func NewDBView(cfg *Sql) View {
 	}).SetGap(DefaultPadding)
 
 	grid.AddView(
-		NewPicker("mysql").
+		NewPicker("mysql", "b", "c").
 			SetSelected(0).
+			BindText(&cfg.Driver).
 			SetLabel(values.SetupDriver()).
 			Style(Width(Percent(100))),
 		GridLayoutParams{Area: "driver"})
@@ -34,6 +35,7 @@ func NewDBView(cfg *Sql) View {
 		NewTextField().
 			SetLabel(values.SetupPort()).
 			SetInputType(Number).
+			BindInt(&cfg.Port).
 			SetText("3306").
 			Style(Width(Percent(100))),
 		GridLayoutParams{Area: "port"})
@@ -67,8 +69,9 @@ func NewDBView(cfg *Sql) View {
 			"Required",
 			"VerifyCA",
 			"VerifyIdentify").
-			SetLabel(values.SetupSslMode()).
 			SetSelected(0).
+			BindText(&cfg.SSLMode).
+			SetLabel(values.SetupSslMode()).
 			Style(Width(Percent(100))),
 		GridLayoutParams{Area: "ssl"})
 

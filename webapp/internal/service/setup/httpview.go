@@ -14,11 +14,13 @@ func NewHttpView(cfg *Server) View {
 		AddView(
 			NewTextField().
 				SetLabel(values.SetupHttpAddress()).
+				BindText(&cfg.Address).
 				Style(Width(Percent(100))),
 			GridLayoutParams{Area: "adr"}).
 		AddView(
 			NewTextField().
 				SetLabel(values.SetupPort()).
+				BindInt(&cfg.Port).
 				Style(Width(Percent(100))),
 			GridLayoutParams{Area: "port"},
 		)

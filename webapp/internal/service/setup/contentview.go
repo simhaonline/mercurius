@@ -45,14 +45,14 @@ func NewContentView() *ContentView {
 		Database: Sql{
 			Driver:       "",
 			Host:         "localhost",
-			Port:         0,
+			Port:         3306,
 			User:         "",
 			Password:     "",
 			DatabaseName: "",
 			SSLMode:      "",
 		},
 		Server: Server{
-			Port:    0,
+			Port:    8080,
 			Address: "localhost",
 		},
 		Development: false,

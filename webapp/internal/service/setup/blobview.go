@@ -9,12 +9,14 @@ func NewBlobView(cfg *BlobStore) View {
 	values := NewResources(locale.Language())
 
 	return NewVStack(
-		NewPicker("filesystem").
+		NewPicker("filesystem", "c").
 			SetSelected(0).
+			BindText(&cfg.Driver).
 			SetLabel(values.SetupDriver()).
 			Style(Width(Percent(100))),
 		NewTextField().
 			SetText("~/.mercurius/storage").
+			BindText(&cfg.Path).
 			SetLabel(values.SetupPath()).
 			Style(Width(Percent(100))),
 	)
