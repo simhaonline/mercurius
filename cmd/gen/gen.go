@@ -29,7 +29,8 @@ func generate() error {
 
 	pkg := reflectplus.Must(reflectplus.Generate(modDir))
 	// load into current reflectplus context
-	reflectplus.AddPackage(*pkg)
+	reflectplus.AddPackage(pkg)
+	defineCustomTypeDefs()
 
 	doc, err := makeOpenAPI(modDir, pkg)
 	if err != nil {
@@ -47,6 +48,17 @@ func generate() error {
 	return nil
 }
 
+func defineCustomTypeDefs() {
+	reflectplus.PutTypeDef(reflectplus.TypeDef{
+		Doc:            "The uuid type",
+		Name:           "UUID",
+		ImportPath:     "github.com/golangee/uuid",
+		IsAlias:        false,
+		UnderlyingType: reflectplus.TypeDecl{Identifier: "[]", Params: []reflectplus.TypeDecl{{Identifier: "byte"}}},
+		Pos:            reflectplus.Pos{},
+	})
+}
+
 func makeBundle() error {
 	return bundle.Embed(bundle.Options{
 		TargetDir:   "internal/resources",
@@ -59,6 +71,7 @@ func makeOpenAPIClient(doc *v3.Document) error {
 	return async.Generate([]byte(doc.String()), async.Options{
 		TargetDir:     "webapp/internal/client",
 		TargetPackage: "client",
+		UseReferences: []string{"github.com/golangee/uuid#UUID"},
 	})
 }
 

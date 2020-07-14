@@ -6,6 +6,7 @@ import (
 	context "context"
 	json "encoding/json"
 	fmt "fmt"
+	uuid "github.com/golangee/uuid"
 	io "io"
 	ioutil "io/ioutil"
 	http "net/http"
@@ -15,6 +16,8 @@ import (
 
 // Status represents the current setup status.
 type Status struct {
+	//
+	ID2 uuid.UUID
 	// status id
 	Id int
 	// a textual representation as a developer notice

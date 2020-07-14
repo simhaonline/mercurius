@@ -12,6 +12,7 @@ package setup
 
 import (
 	"fmt"
+	"github.com/golangee/uuid"
 	"io"
 	"net/http"
 	"time"
@@ -28,6 +29,7 @@ type Status struct {
 	Id int
 	// a textual representation as a developer notice
 	Message string
+	ID2     uuid.UUID
 }
 
 // @ee.http.Controller

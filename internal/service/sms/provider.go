@@ -18,6 +18,20 @@ import (
 // ProviderType tells which of the sms provider implementation should be used.
 type ProviderType int
 
+type ProviderType0 *int
+
+type ProviderType1 uuid.UUID
+
+type ProviderType2 ProviderType
+
+type ProviderType3 = ProviderType
+
+type ProviderType4 []ProviderType
+
+type ProviderType5 = []ProviderType
+
+type ProviderType6 = map[string]ProviderType
+
 const (
 	Sipgate ProviderType = 1
 	API     ProviderType = 2
