@@ -227,6 +227,7 @@ type SetupService struct {
 func (_self SetupService) syncApiV1SetupStatus(_ctx context.Context) ([]Status, error) {
 	var _res []Status
 	path := fmt.Sprintf("/api/v1/setup/status")
+	path += fmt.Sprintf("?")
 	_req, _err := _self.parent.newRequest(_ctx, "GET", path, "", "application/json", nil)
 	if _err != nil {
 		return _res, _err
@@ -239,6 +240,27 @@ func (_self SetupService) syncApiV1SetupStatus(_ctx context.Context) ([]Status, 
 func (_self SetupService) ApiV1SetupStatus(_ctx context.Context, f func(res []Status, err error)) {
 	go func() {
 		res, err := _self.syncApiV1SetupStatus(_ctx)
+		f(res, err)
+	}()
+}
+
+// Status returns the current setup status. This is usually only relevant in the installation phase.
+func (_self SetupService) syncApiV1SetupStatus2Id(_ctx context.Context, id uuid.UUID, x uuid.UUID) ([]Status, error) {
+	var _res []Status
+	path := fmt.Sprintf("/api/v1/setup/status2/%v", id)
+	path += fmt.Sprintf("?&x=%s", url.QueryEscape(fmt.Sprintf("%v", x)))
+	_req, _err := _self.parent.newRequest(_ctx, "GET", path, "", "application/json", nil)
+	if _err != nil {
+		return _res, _err
+	}
+	_, _err = _self.parent.doJson(_req, &_res)
+	return _res, _err
+}
+
+// Status returns the current setup status. This is usually only relevant in the installation phase.
+func (_self SetupService) ApiV1SetupStatus2Id(_ctx context.Context, id uuid.UUID, x uuid.UUID, f func(res []Status, err error)) {
+	go func() {
+		res, err := _self.syncApiV1SetupStatus2Id(_ctx, id, x)
 		f(res, err)
 	}()
 }

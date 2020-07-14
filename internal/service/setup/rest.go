@@ -45,6 +45,16 @@ func NewRestController(ctr Reloader) *RestController {
 
 // Status returns the current setup status. This is usually only relevant in the installation phase.
 //
+// @ee.http.Route("/status2/:id")
+// @ee.http.PathParam("id")
+// @ee.http.QueryParam("x")
+// @ee.http.Method("GET")
+func (s *RestController) Status2(res http.ResponseWriter, id,x uuid.UUID) ([]Status, error) {
+	return nil,fmt.Errorf("blub")
+}
+
+// Status returns the current setup status. This is usually only relevant in the installation phase.
+//
 // @ee.http.Route("/status")
 // @ee.http.Method("GET")
 func (s *RestController) Status(res http.ResponseWriter, req *http.Request) ([]Status, error) {
